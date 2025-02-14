@@ -1,13 +1,13 @@
-package com.luv2code.orderinventorymq;
+package com.luv2code.inventoryservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OrderInventoryMqApplication {
+public class InventoryServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OrderInventoryMqApplication.class, args);
+        SpringApplication.run(InventoryServiceApplication.class, args);
     }
 
 }

@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=order-inventory
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  
+  rabbit-mq:
+    image: rabbitmq:3.13.7-management-alpine
+    container_name: rabbit-mq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=password
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  postgres-data:
+  rabbitmq_data:
