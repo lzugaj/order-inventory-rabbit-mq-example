@@ -1,10 +1,10 @@
-package com.luv2code.orderservice;
+package com.luv2code.order;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OrderServiceApplicationTests {
+class OrderApplicationTests {
 
     @Test
     void contextLoads() {

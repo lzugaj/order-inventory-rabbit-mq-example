@@ -1,0 +1,32 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: order-service
+  datasource:
+    url: jdbc:postgresql://localhost:5435/order
+    username: 'postgres'
+    password: 'password'
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: 'guest'
+    password: 'password'
+
+com:
+  luv2code:
+    rabbitmq:
+      exchange:
+        topic:
+          order: ecommerce.order.topic-exchange
+      queue:
+        created: order-created-queue
+      routing-key:
+        order:
+          created: order.created
