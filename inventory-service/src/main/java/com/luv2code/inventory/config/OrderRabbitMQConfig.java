@@ -1,4 +1,4 @@
-package com.luv2code.order.config;
+package com.luv2code.inventory.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;

@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 @Component
-public class OrderCreatedMapper {
+public class OrderCreateMapper {
 
-    public OrderCreatedMessage toMessage(OrderDTO orderDTO) {
+    public OrderMessage toMessage(OrderDTO orderDTO, long orderId) {
         Assert.notNull(orderDTO, "Order DTO must not be null.");
-
-        return OrderCreatedMessage.builder()
+        return OrderMessage.builder()
                 .productId(orderDTO.getProductId())
                 .quantity(orderDTO.getQuantity())
+                .orderId(orderId)
                 .build();
     }
 }

@@ -27,6 +27,10 @@ com:
           order: ecommerce.order.topic-exchange
       queue:
         created: order-created-queue
+        failed: order-failed-queue
+        confirmed: order-confirmed-queue
       routing-key:
         order:
           created: order.created
+          failed: order.failed
+          confirmed: order.confirmed

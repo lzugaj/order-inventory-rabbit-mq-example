@@ -19,6 +19,7 @@ import org.springframework.util.Assert;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import static com.luv2code.order.model.OrderStatus.*;
 import static jakarta.persistence.EnumType.STRING;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -62,6 +63,10 @@ public class Order {
     @Column(name = "order_at")
     private LocalDateTime orderAt;
 
+    @Enumerated(STRING)
+    @Column(name = "order_status")
+    private OrderStatus orderStatus;
+
     @Builder
     public Order(
             String productName,
@@ -78,5 +83,14 @@ public class Order {
         this.quantity = quantity;
         this.price = price;
         this.orderAt = LocalDateTime.now();
+        this.orderStatus = CREATED;
+    }
+
+    public void orderFailed() {
+        this.orderStatus = FAILED;
+    }
+
+    public void orderConfirmed() {
+        this.orderStatus = CONFIRMED;
     }
 }

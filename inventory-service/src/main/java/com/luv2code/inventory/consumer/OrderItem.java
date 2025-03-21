@@ -1,4 +1,4 @@
-package com.luv2code.order.producer;
+package com.luv2code.inventory.consumer;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Builder
 @AllArgsConstructor
-public class OrderCreatedMessage {
+public class OrderItem {
 
     @NotNull
     private UUID productId;

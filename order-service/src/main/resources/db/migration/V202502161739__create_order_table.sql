@@ -8,5 +8,6 @@ create table if not exists "orders"
     quantity         smallint       not null,
     price            decimal(15, 2) not null,
     order_at         timestamp      not null,
+    order_status     varchar(32)    not null,
     primary key (id)
 );

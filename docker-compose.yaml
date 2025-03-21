@@ -1,9 +1,9 @@
 version: "3.9"
 
 services:
-  db:
+  order-db:
     image: postgres:latest
-    container_name: postgres
+    container_name: order-db
     restart: always
     ports:
       - "5435:5432"
@@ -11,6 +11,19 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=order
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  
+  inventory-db:
+    image: postgres:latest
+    container_name: inventory-db
+    restart: always
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=inventory
     volumes:
       - postgres-data:/var/lib/postgresql/data
   
