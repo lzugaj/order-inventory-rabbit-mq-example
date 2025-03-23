@@ -76,6 +76,9 @@ class OrderServiceTest {
 
         verify(orderRepository, times(1)).save(any());
         verify(orderProducer, times(1)).makeOrder(any());
+        verify(orderMapper, times(1)).toEntity(any());
+        verify(orderCreateMapper, times(1)).toMessage(any(), anyLong());
+        verifyNoMoreInteractions(orderRepository, orderProducer, orderCreateMapper, orderMapper);
     }
 
     @Test
@@ -98,6 +101,9 @@ class OrderServiceTest {
         String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
+
+        verify(orderRepository, times(1)).findById(anyLong());
+        verifyNoMoreInteractions(orderRepository);
     }
 
     @Test
@@ -123,6 +129,7 @@ class OrderServiceTest {
 
         assertEquals(FAILED, order.getOrderStatus());
         verify(orderRepository, times(1)).findById(134L);
+        verifyNoMoreInteractions(orderRepository);
     }
 
     @Test
@@ -148,5 +155,6 @@ class OrderServiceTest {
 
         assertEquals(CONFIRMED, order.getOrderStatus());
         verify(orderRepository, times(1)).findById(134L);
+        verifyNoMoreInteractions(orderRepository);
     }
 }

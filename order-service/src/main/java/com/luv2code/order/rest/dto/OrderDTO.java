@@ -27,6 +27,7 @@ public class OrderDTO {
     @PositiveOrZero
     private int quantity;
 
+    @NotNull
     @PositiveOrZero
     private BigDecimal price;
 

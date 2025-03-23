@@ -1,5 +1,6 @@
 package com.luv2code.order.integration;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,31 +11,34 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.RabbitMQContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.lifecycle.Startables;
-import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public abstract class TestcontainersInitializer {
+public abstract class BaseIntegrationTest {
 
     @Autowired
     protected WebTestClient webTestClient;
 
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-            DockerImageName.parse("postgres:latest"))
+    @Autowired
+    protected RabbitTemplate rabbitTemplate;
+
+    protected String orderQueue = "order-created-queue";
+    protected String orderFailedQueue = "order-failed-queue";
+    protected String orderConfirmedQueue = "order-confirmed-queue";
+
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest")
             .withReuse(true);
 
-    static RabbitMQContainer rabbitMQ = new RabbitMQContainer(DockerImageName.parse("rabbitmq:3.13.7-management-alpine"))
-            .withExposedPorts(5672, 15672)
+    static RabbitMQContainer rabbitMQ = new RabbitMQContainer("rabbitmq:3.13.7-management-alpine")
+            .withReuse(true)
             .withCopyFileToContainer(MountableFile.forClasspathResource("rabbitmq/definitions.json"),
                     "/etc/rabbitmq/definitions.json")
-            .withEnv("RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS", "-rabbitmq_management load_definitions \"/etc/rabbitmq/definitions.json\"")
-            .waitingFor(Wait.forListeningPort())
-            .withReuse(true);
+            .withEnv("RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS",
+                    "-rabbitmq_management load_definitions \"/etc/rabbitmq/definitions.json\"");
 
     static {
         try {
@@ -49,9 +53,10 @@ public abstract class TestcontainersInitializer {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
+
         registry.add("spring.rabbitmq.host", rabbitMQ::getHost);
-        registry.add("spring.rabbitmq.port", () -> rabbitMQ.getMappedPort(5672));
-        registry.add("spring.rabbitmq.username", rabbitMQ::getAdminUsername);
-        registry.add("spring.rabbitmq.password", rabbitMQ::getAdminPassword);
+        registry.add("spring.rabbitmq.port", rabbitMQ::getAmqpPort);
+        registry.add("spring.rabbitmq.username", () -> "guest");
+        registry.add("spring.rabbitmq.password", () -> "guest");
     }
 }

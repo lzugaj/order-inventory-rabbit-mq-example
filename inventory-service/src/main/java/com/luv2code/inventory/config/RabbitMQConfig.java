@@ -1,46 +1,44 @@
 package com.luv2code.inventory.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class RabbitMQConfig {
 
-    private final String username;
-    private final String password;
+    private final RabbitProperties rabbitProperties;
 
-    public RabbitMQConfig(
-            @Value("${spring.rabbitmq.username}") final String username,
-            @Value("${spring.rabbitmq.password}") final String password
-    ) {
-        this.username = username;
-        this.password = password;
+    @Bean
+    public ConnectionFactory connectionFactory() {
+        CachingConnectionFactory factory = new CachingConnectionFactory();
+        factory.setHost(rabbitProperties.getHost());
+        factory.setPort(rabbitProperties.getPort());
+        factory.setUsername(rabbitProperties.getUsername());
+        factory.setPassword(rabbitProperties.getPassword());
+        return factory;
     }
 
     @Bean
-    public MessageConverter converter() {
+    public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
     @Bean
-    public ConnectionFactory connection() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setUsername(this.username);
-        connectionFactory.setPassword(this.password);
-        return connectionFactory;
-    }
-
-    @Bean
-    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory) {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(converter());
-        return rabbitTemplate;
+    public AmqpTemplate amqpTemplate(
+            ConnectionFactory connectionFactory,
+            MessageConverter messageConverter
+    ) {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setMessageConverter(messageConverter);
+        return template;
     }
 }

@@ -5,19 +5,20 @@ spring:
   application:
     name: order-service
   datasource:
-    url: jdbc:postgresql://localhost:5435/order
-    username: 'postgres'
-    password: 'password'
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    driver-class-name: org.postgresql.Driver
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: 'guest'
-    password: 'password'
+    host: ${RABBITMQ_HOST:disabled}
+    port: ${RABBITMQ_PORT:0}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASS}
 
 com:
   luv2code:
