@@ -13,14 +13,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OrderConsumer {
 
-    private final OrderMapper orderCreateMapper;
+    private final OrderMapper orderMapper;
     private final InventoryService inventoryService;
 
     @RabbitListener(queues = "${com.luv2code.rabbitmq.queue.created}")
     public void processOrder(Map<String, Object> orderMessage) {
         log.info("Received new order for product. [productId={}]", orderMessage.get("productId"));
 
-        OrderItem orderItem = orderCreateMapper.toMessage(orderMessage);
+        OrderItem orderItem = orderMapper.toMessage(orderMessage);
         Integer orderId = (Integer) orderMessage.get("orderId");
         inventoryService.updateStock(orderItem, orderId);
     }

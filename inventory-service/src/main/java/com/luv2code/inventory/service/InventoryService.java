@@ -28,7 +28,6 @@ public class InventoryService {
         } else {
             Inventory inventory = getInventory(orderItem.getProductId());
             inventory.updateProductQuantityStock(inventory.getQuantityInStock() - orderItem.getQuantity());
-            inventoryRepository.save(inventory);
 
             orderNotificationProducer.sendConfirmedOrderNotificationMessage(orderItem.getProductId(), orderId);
             log.info("Successfully updated product stock. Order confirmed. [productId={}]", orderItem.getProductId());
@@ -53,7 +52,7 @@ public class InventoryService {
     private Inventory getInventory(UUID productId) {
         Optional<Inventory> inventory = inventoryRepository.findByProductId(productId);
         if (inventory.isEmpty()) {
-            log.error("Product is not find in inventory. Order failed. [productId={}]", productId);
+            log.error("Product is not find in inventory. Order failed. [productId={}]", productId.toString());
             throw new IllegalArgumentException(
                     String.format("Product is not find in inventory. [productId=%s]", productId)
             );
