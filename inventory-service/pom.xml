@@ -20,7 +20,7 @@
         <java.version>21</java.version>
 
         <spring-rabbit.version>3.2.2</spring-rabbit.version>
-        <lombok.version>1.18.36</lombok.version>
+        <lombok.version>1.18.40</lombok.version>
     </properties>
 
     <dependencies>
